@@ -235,9 +235,11 @@ def pivot_compare(df_prev, df_curr, by, writer, sheet_name):
     out = pd.concat([merged, total.to_frame().T]).reset_index().rename(columns={'index': by})
     out.to_excel(writer, sheet_name=sheet_name, index=False)
 
-    ws = writer.sheets[sheet_name]
-    for col in range(1, len(out.columns)+1):
-        ws.cell(row=len(out), column=col).font = Font(bold=True)
+    # inside pivot_compare(...)
+ws = writer.sheets[sheet_name]
+last_row = len(out) + 1          # +1 because header is row 1
+for col in range(1, len(out.columns)+1):
+    ws.cell(row=last_row, column=col).font = Font(bold=True)
 
 ###############################################################################
 # ------------------------------ MAIN APP -------------------------------------
