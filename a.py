@@ -172,10 +172,62 @@ def pivot_compare(df_prev, df_curr, by, writer, sheet_name):
         ws.cell(row=len(out), column=col).font = Font(bold=True)
 
 ###############################################################################
-# ------------------------------ MAIN APP -------------------------------------
+# ----------------------------- AUTH LOGIC ------------------------------------
+def require_login():
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    if st.session_state["authenticated"]:
+        return True
+
+    st.markdown("""
+        <style>
+        .login-box {max-width: 300px; margin: 60px auto; padding: 20px;
+                    border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);}
+        </style>
+        <div class="login-box">
+            <h4>Please Log In</h4>
+        </div>
+    """, unsafe_allow_html=True)
+
+    with st.form("login_form"):
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submitted = st.form_submit_button("Login")
+
+    if submitted:
+        try:
+            correct_user = st.secrets["auth"]["username"]
+            correct_pass = st.secrets["auth"]["password"]
+        except KeyError as e:
+            st.error("❌ Missing secrets.toml entry: " + str(e))
+            st.stop()
+
+        if username == correct_user and password == correct_pass:
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("❌ Invalid username or password.")
+    return False
+
+###############################################################################
+# ------------------------------ MAIN ------------------------------------------
 def main():
+    st.set_page_config(page_title="📊 Unified Report Generator", layout="centered")
+
+    st.markdown("""
+        <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        header {visibility: hidden;}
+        </style>
+    """, unsafe_allow_html=True)
+
+    if not require_login():
+        return
+
     st.title("📊 Unified Report Generator")
-    st.write("Upload **Previous** and **Current** Excel files to generate one consolidated report.")
+    st.write("Upload **Previous** and **Current** Excel files to generate a consolidated report.")
 
     prev_upl = st.file_uploader("📅 Previous period", type=['xlsx'])
     curr_upl = st.file_uploader("📅 Current period",  type=['xlsx'])
@@ -194,14 +246,12 @@ def main():
                     df_prev_raw = pd.read_excel(tmp_prev_path)
                     df_curr_raw = pd.read_excel(tmp_curr_path)
 
-                    # Slippage
                     df_prev_sl = preprocess_slippage(df_prev_raw)
                     df_curr_sl = preprocess_slippage(df_curr_raw)
                     slip = detect_slippage(df_prev_sl, df_curr_sl)
                     branch_sum = category_matrix(slip, 'Branch Name')
                     actype_sum = category_matrix(slip, 'Ac Type Desc')
 
-                    # Balance
                     df_prev_cp = preprocess_comp(df_prev_raw)
                     df_curr_cp = preprocess_comp(df_curr_raw)
 
@@ -226,7 +276,6 @@ def main():
                         file_name=f"unified_report_{datetime.now():%Y%m%d_%H%M%S}.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-                    # Clean temp files
                     os.unlink(tmp_prev_path)
                     os.unlink(tmp_curr_path)
 
