@@ -1,14 +1,9 @@
-###############################################################################
-# app.py  –  Unified Report Generator with login (no .secrets.toml in repo)
-###############################################################################
 import streamlit as st
 import pandas as pd
 from openpyxl.styles import Font
 from datetime import datetime
 import io, os, tempfile, traceback
 
-###############################################################################
-# -------------------------  LOGIN PAGE  --------------------------------------
 # --- Hide Streamlit UI components ---
 st.markdown("""
     <style>
@@ -18,6 +13,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+###############################################################################
+# -------------------------  LOGIN PAGE  --------------------------------------
 def login_page():
     st.markdown("""
         <style>
@@ -215,7 +212,10 @@ def balance_comparison(df_prev, df_curr, writer):
           'Curr_Bal', 'Prev_Bal', 'Change']].to_excel(writer, sheet_name='Movement', index=False)
     reco.to_excel(writer, sheet_name='Reco', index=False)
 
+###############################################################################
+# --------------------------- PIVOT COMPARE  (FIXED) --------------------------
 def pivot_compare(df_prev, df_curr, by, writer, sheet_name):
+    # summaries
     g1 = (df_prev.groupby(by)
           .agg(Prev_Sum=('Balance', 'sum'), Prev_Cnt=(by, 'count'))
           .rename(columns={by: 'tmp'}))
@@ -227,19 +227,22 @@ def pivot_compare(df_prev, df_curr, by, writer, sheet_name):
     merged['Pct'] = (merged['Change'] / merged['Prev_Sum'].replace(0, pd.NA) * 100).fillna(0)
     merged['Pct'] = merged['Pct'].map('{:.2f}%'.format)
 
-    total = merged.sum()
+    # grand-total row
+    total = merged.sum(numeric_only=True)
     total.name = 'Total'
     total['Pct'] = '{:.2f}%'.format(
         (total['New_Sum'] - total['Prev_Sum']) / total['Prev_Sum'] * 100
         if total['Prev_Sum'] else 0)
     out = pd.concat([merged, total.to_frame().T]).reset_index().rename(columns={'index': by})
-    out.to_excel(writer, sheet_name=sheet_name, index=False)
 
-    # inside pivot_compare(...)
-ws = writer.sheets[sheet_name]
-last_row = len(out) + 1          # +1 because header is row 1
-for col in range(1, len(out.columns)+1):
-    ws.cell(row=last_row, column=col).font = Font(bold=True)
+    # write to Excel
+    out.to_excel(writer, sheet_name=sheet_name, index=False)
+    ws = writer.sheets[sheet_name]
+
+    # bold ONLY the last (grand-total) row
+    last_row = len(out) + 1          # +1 for header offset
+    for col in range(1, len(out.columns) + 1):
+        ws.cell(row=last_row, column=col).font = Font(bold=True)
 
 ###############################################################################
 # ------------------------------ MAIN APP -------------------------------------
