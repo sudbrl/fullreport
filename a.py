@@ -9,6 +9,15 @@ import io, os, tempfile, traceback
 
 ###############################################################################
 # -------------------------  LOGIN PAGE  --------------------------------------
+# --- Hide Streamlit UI components ---
+st.markdown("""
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
+
 def login_page():
     st.markdown("""
         <style>
