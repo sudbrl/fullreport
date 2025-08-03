@@ -126,15 +126,24 @@ def detect_slippage(df_prev, df_curr):
     curr = df_curr[['Main Code', 'Prov_rank', 'Prov_cat']].rename(
         columns={'Prov_rank': 'rank_curr', 'Prov_cat': 'cat_curr'})
     merged = pd.merge(prev, curr, on='Main Code', how='inner')
-    full = (df_curr[df_curr['Main Code'].isin(merged['Main Code'])]
-            .merge(merged[['Main Code', 'rank_prev', 'cat_prev']], on='Main Code'))
+    
+    # Get current accounts with previous categories
+    full = df_curr[df_curr['Main Code'].isin(merged['Main Code'])].copy()
+    full = full.merge(merged[['Main Code', 'rank_prev', 'cat_prev']], on='Main Code')
+    
+    # Calculate movement
     full['Movement'] = full.apply(
         lambda r: "Slippage" if r['Prov_rank'] > r['rank_prev'] else
                   "Upgrade" if r['Prov_rank'] < r['rank_prev'] else
                   "Stable", axis=1)
-    cols = ['Branch Name', 'Main Code', 'Ac Type Desc', 'Name',
-            'Limit', 'Balance', 'cat_prev', 'cat_curr', 'Movement']
-    return full[cols]
+    
+    # Create result with specific columns
+    result = full[['Branch Name', 'Main Code', 'Ac Type Desc', 'Name', 'Limit', 'Balance']].copy()
+    result['cat_prev'] = full['cat_prev']
+    result['cat_curr'] = full['Prov_cat']  # Current provision category
+    result['Movement'] = full['Movement']
+    
+    return result
 def category_matrix(df, group_col=None):
     index = group_col if group_col else pd.Series(0, index=df.index, name='dummy')
     mat = (df
@@ -238,8 +247,6 @@ def main():
                     df_prev_sl = preprocess_slippage(df_prev_raw)
                     df_curr_sl = preprocess_slippage(df_curr_raw)
                     slip = detect_slippage(df_prev_sl, df_curr_sl)
-                    
-                    # Create category matrices
                     branch_sum = category_matrix(slip, 'Branch Name')
                     actype_sum = category_matrix(slip, 'Ac Type Desc')
                     
@@ -284,7 +291,7 @@ def main():
                         label="📥 Download unified report",
                         data=out,
                         file_name=f"unified_report_{datetime.now():%Y%m%d_%H%M%S}.xlsx",
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                        mime="application/vnd.openxmlformats-officedocument.spicedsheetml.sheet")
                     # Clean temp files
                     os.unlink(tmp_prev_path)
                     os.unlink(tmp_curr_path)
