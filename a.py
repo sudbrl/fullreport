@@ -238,14 +238,31 @@ def main():
                     df_prev_sl = preprocess_slippage(df_prev_raw)
                     df_curr_sl = preprocess_slippage(df_curr_raw)
                     slip = detect_slippage(df_prev_sl, df_curr_sl)
+                    
+                    # Create category matrices
                     branch_sum = category_matrix(slip, 'Branch Name')
                     actype_sum = category_matrix(slip, 'Ac Type Desc')
                     
                     # Add cat_prev column as second column in summary sheets
                     if not branch_sum.empty:
-                        branch_sum.insert(1, 'cat_prev', slip['cat_prev'].values[:len(branch_sum)])
+                        # Get unique previous categories for each branch
+                        branch_prev = slip.groupby('Branch Name')['cat_prev'].first().reset_index()
+                        # Merge with branch_sum to add cat_prev as second column
+                        branch_sum = pd.merge(branch_sum[['Branch Name']], branch_prev, on='Branch Name')
+                        # Reorder columns to have cat_prev as second
+                        cols = branch_sum.columns.tolist()
+                        cols = [cols[0]] + [cols[-1]] + cols[1:-1]
+                        branch_sum = branch_sum[cols]
+                    
                     if not actype_sum.empty:
-                        actype_sum.insert(1, 'cat_prev', slip['cat_prev'].values[:len(actype_sum)])
+                        # Get unique previous categories for each account type
+                        actype_prev = slip.groupby('Ac Type Desc')['cat_prev'].first().reset_index()
+                        # Merge with actype_sum to add cat_prev as second column
+                        actype_sum = pd.merge(actype_sum[['Ac Type Desc']], actype_prev, on='Ac Type Desc')
+                        # Reorder columns to have cat_prev as second
+                        cols = actype_sum.columns.tolist()
+                        cols = [cols[0]] + [cols[-1]] + cols[1:-1]
+                        actype_sum = actype_sum[cols]
                     
                     # Balance
                     df_prev_cp = preprocess_comp(df_prev_raw)
