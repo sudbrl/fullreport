@@ -15,7 +15,7 @@ st.markdown("""
     
     /* Global styling */
     .stApp {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     
@@ -23,10 +23,10 @@ st.markdown("""
     .main .block-container {
         padding-top: 2rem;
         padding-bottom: 2rem;
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(226, 232, 240, 0.8);
         margin: 2rem auto;
         max-width: 800px;
     }
@@ -34,121 +34,114 @@ st.markdown("""
     /* Title styling */
     .main-title {
         text-align: center;
-        color: #2c3e50;
-        font-size: 2.5rem;
-        font-weight: 700;
+        color: #1e293b;
+        font-size: 2.2rem;
+        font-weight: 600;
         margin-bottom: 0.5rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     
     .sub-title {
         text-align: center;
-        color: #7f8c8d;
-        font-size: 1.1rem;
+        color: #64748b;
+        font-size: 1rem;
         margin-bottom: 2rem;
         font-weight: 400;
     }
     
     /* File uploader styling */
     .stFileUploader > div > div {
-        background: linear-gradient(145deg, #f8f9fa, #e9ecef);
-        border: 2px dashed #6c757d;
-        border-radius: 15px;
-        padding: 2rem;
-        transition: all 0.3s ease;
+        background: #ffffff;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.2s ease;
     }
     
     .stFileUploader > div > div:hover {
-        border-color: #667eea;
-        background: linear-gradient(145deg, #f1f3f4, #e3f2fd);
-        transform: translateY(-2px);
+        border-color: #3b82f6;
+        background: #fefefe;
     }
     
     /* Button styling */
     .stButton > button {
         width: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #1e293b;
         color: white;
         border: none;
-        border-radius: 12px;
-        padding: 0.75rem 2rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        letter-spacing: 0.025em;
     }
     
     .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+        background: #0f172a;
+        transform: translateY(-1px);
     }
     
     .stButton > button:active {
-        transform: translateY(-1px);
+        transform: translateY(0px);
     }
     
     /* Download button styling */
     .stDownloadButton > button {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        background: #059669;
         color: white;
         border: none;
-        border-radius: 12px;
-        padding: 0.75rem 2rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
-        transition: all 0.3s ease;
+        border-radius: 6px;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
         width: 100%;
     }
     
     .stDownloadButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 25px rgba(40, 167, 69, 0.4);
+        background: #047857;
+        transform: translateY(-1px);
     }
     
     /* Progress bar styling */
     .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #667eea, #764ba2);
-        border-radius: 10px;
+        background: #3b82f6;
+        border-radius: 4px;
     }
     
     /* Success/Error messages */
     .stSuccess {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        border: 1px solid #c3e6cb;
-        border-radius: 12px;
-        padding: 1rem;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 6px;
+        padding: 0.75rem;
     }
     
     .stError {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-        border: 1px solid #f5c6cb;
-        border-radius: 12px;
-        padding: 1rem;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        padding: 0.75rem;
     }
     
     /* Sidebar styling */
     .css-1d391kg {
-        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
     }
     
     .css-1d391kg .stButton > button {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: #374151;
+        border: 1px solid #4b5563;
         color: white;
-        backdrop-filter: blur(10px);
     }
     
     .css-1d391kg .stButton > button:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
+        background: #1f2937;
     }
     
     /* Spinner styling */
     .stSpinner > div {
-        border-top-color: #667eea !important;
+        border-top-color: #3b82f6 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -159,38 +152,36 @@ def login_page():
     st.markdown("""
         <style>
         .login-container {
-            max-width: 400px;
+            max-width: 380px;
             margin: 10vh auto;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            backdrop-filter: blur(15px);
+            padding: 2.5rem;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
         }
         .login-header {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e293b;
             margin-bottom: 0.5rem;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
         .login-subtitle {
-            font-size: 1rem;
-            color: #7f8c8d;
+            font-size: 0.9rem;
+            color: #64748b;
             text-align: center;
             margin-bottom: 2rem;
         }
         .stTextInput > div > div > input {
-            border-radius: 12px;
-            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            border: 2px solid #e2e8f0;
             padding: 0.75rem;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
         .stTextInput > div > div > input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            border-color: #3b82f6;
         }
         </style>
         <div class="login-container">
