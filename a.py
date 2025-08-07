@@ -4,12 +4,152 @@ from openpyxl.styles import Font
 from datetime import datetime
 import io, os, tempfile, traceback
 
-# --- Hide Streamlit UI components ---
+# --- Enhanced UI Styling ---
 st.markdown("""
     <style>
+    /* Hide default Streamlit components */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    .stDeployButton {visibility: hidden;}
+    
+    /* Global styling */
+    .stApp {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    
+    /* Main container styling */
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        margin: 2rem auto;
+        max-width: 800px;
+    }
+    
+    /* Title styling */
+    .main-title {
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .sub-title {
+        text-align: center;
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        font-weight: 400;
+    }
+    
+    /* File uploader styling */
+    .stFileUploader > div > div {
+        background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+        border: 2px dashed #6c757d;
+        border-radius: 15px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+    }
+    
+    .stFileUploader > div > div:hover {
+        border-color: #667eea;
+        background: linear-gradient(145deg, #f1f3f4, #e3f2fd);
+        transform: translateY(-2px);
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stButton > button:active {
+        transform: translateY(-1px);
+    }
+    
+    /* Download button styling */
+    .stDownloadButton > button {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .stDownloadButton > button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(40, 167, 69, 0.4);
+    }
+    
+    /* Progress bar styling */
+    .stProgress > div > div > div > div {
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 10px;
+    }
+    
+    /* Success/Error messages */
+    .stSuccess {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 1px solid #c3e6cb;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+    
+    .stError {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        border: 1px solid #f5c6cb;
+        border-radius: 12px;
+        padding: 1rem;
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .css-1d391kg .stButton > button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+    
+    .css-1d391kg .stButton > button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    /* Spinner styling */
+    .stSpinner > div {
+        border-top-color: #667eea !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -19,38 +159,57 @@ def login_page():
     st.markdown("""
         <style>
         .login-container {
-            max-width: 280px;
-            margin: 60px auto;
-            padding: 15px 20px;
-            background: #f0f2f6;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 10vh auto;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(15px);
         }
         .login-header {
-            font-size: 20px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
             text-align: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .login-subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .stTextInput > div > div > input {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .stTextInput > div > div > input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
         }
         </style>
         <div class="login-container">
-            <div class="login-header">Please Log In</div>
+            <div class="login-header">🔐 Secure Login</div>
+            <div class="login-subtitle">Access your unified report generator</div>
         </div>
     """, unsafe_allow_html=True)
 
     with st.form("login_form"):
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        submitted = st.form_submit_button("Login")
+        username = st.text_input("👤 Username", placeholder="Enter your username")
+        password = st.text_input("🔑 Password", type="password", placeholder="Enter your password")
+        submitted = st.form_submit_button("🚀 Login")
 
     if submitted:
         if username in st.secrets.get("auth", {}) and password == st.secrets["auth"][username]:
             st.session_state["authenticated"] = True
             st.rerun()
         else:
-            st.error("Invalid username or password.")
+            st.error("❌ Invalid username or password. Please try again.")
 
 ###############################################################################
 # -------------------------  APP ENTRY POINT  ---------------------------------
@@ -64,20 +223,15 @@ if not st.session_state["authenticated"]:
 ###############################################################################
 # -------------------------  SIDEBAR LOGOUT  ----------------------------------
 with st.sidebar:
-    if st.button("Logout"):
+    st.markdown("### 🎛️ Controls")
+    st.markdown("---")
+    if st.button("🚪 Logout"):
         st.session_state["authenticated"] = False
         st.rerun()
-
-###############################################################################
-# ---------------------------  ORIGINAL APP  ----------------------------------
-st.set_page_config(page_title="📊 Unified Report Generator", layout="centered")
-st.markdown("""
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    </style>
-""", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### ℹ️ Info")
+    st.markdown("**Version:** 2.0")
+    st.markdown("**Last Updated:** " + datetime.now().strftime("%Y-%m-%d"))
 
 ###############################################################################
 # ----------------------------- CONSTANTS -------------------------------------
@@ -156,6 +310,8 @@ def detect_slippage(df_prev, df_curr):
 
 def category_matrix(df, group_col=None):
     index = group_col if group_col else pd.Series(0, index=df.index, name='dummy')
+    
+    # Create pivot table with previous category breakdown
     mat = (df
            .pivot_table(index=index,
                         columns='cat_prev',
@@ -164,8 +320,14 @@ def category_matrix(df, group_col=None):
                         fill_value=0)
            .reindex(columns=CAT_ORDER, fill_value=0)
            .astype(int))
+    
+    # Add previous category column for summary sheets
     if group_col:
-        return mat.reset_index()
+        # Get the previous category for each group
+        prev_cat_mapping = df.groupby(group_col)['cat_prev'].first()
+        result = mat.reset_index()
+        result.insert(1, 'Previous_Category', result[group_col].map(prev_cat_mapping))
+        return result
     else:
         return mat.reset_index(drop=True)
 
@@ -247,66 +409,126 @@ def pivot_compare(df_prev, df_curr, by, writer, sheet_name):
 ###############################################################################
 # ------------------------------ MAIN APP -------------------------------------
 def main():
-    st.title("📊 Unified Report Generator")
-    st.write("Upload **Previous** and **Current** Excel files to generate one consolidated report.")
+    # Page config
+    st.set_page_config(
+        page_title="📊 Unified Report Generator",
+        page_icon="📊",
+        layout="centered",
+        initial_sidebar_state="expanded"
+    )
+    
+    # Main title and subtitle
+    st.markdown('<h1 class="main-title">📊 Unified Report Generator</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">Transform your Excel data into comprehensive analytical reports</p>', unsafe_allow_html=True)
+    
+    # Create two columns for file upload
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("### 📅 Previous Period")
+        prev_upl = st.file_uploader("Upload previous period data", type=['xlsx'], key="prev")
+        
+    with col2:
+        st.markdown("### 📅 Current Period")
+        curr_upl = st.file_uploader("Upload current period data", type=['xlsx'], key="curr")
 
-    prev_upl = st.file_uploader("📅 Previous period", type=['xlsx'])
-    curr_upl = st.file_uploader("📅 Current period",  type=['xlsx'])
+    # Show upload status
+    if prev_upl:
+        st.success(f"✅ Previous file loaded: {prev_upl.name}")
+    if curr_upl:
+        st.success(f"✅ Current file loaded: {curr_upl.name}")
 
     if prev_upl and curr_upl:
-        if st.button("Generate Report"):
-            with st.spinner("Processing…"):
+        st.markdown("---")
+        
+        # Generate report button
+        if st.button("🚀 Generate Unified Report"):
+            # Progress bar
+            progress_bar = st.progress(0)
+            status_text = st.empty()
+            
+            try:
+                # Step 1: Reading files
+                status_text.text("📖 Reading Excel files...")
+                progress_bar.progress(10)
+                
+                with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as tmp_prev, \
+                     tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as tmp_curr:
+                    tmp_prev_path = tmp_prev.name
+                    tmp_curr_path = tmp_curr.name
+                    tmp_prev.write(prev_upl.getbuffer())
+                    tmp_curr.write(curr_upl.getbuffer())
+
+                progress_bar.progress(25)
+                
+                # Step 2: Loading data
+                status_text.text("🔄 Loading and preprocessing data...")
+                df_prev_raw = pd.read_excel(tmp_prev_path)
+                df_curr_raw = pd.read_excel(tmp_curr_path)
+                progress_bar.progress(40)
+
+                # Step 3: Processing slippage
+                status_text.text("📊 Analyzing slippage patterns...")
+                df_prev_sl = preprocess_slippage(df_prev_raw)
+                df_curr_sl = preprocess_slippage(df_curr_raw)
+                slip = detect_slippage(df_prev_sl, df_curr_sl)
+                branch_sum = category_matrix(slip, 'Branch Name')
+                actype_sum = category_matrix(slip, 'Ac Type Desc')
+                progress_bar.progress(60)
+
+                # Step 4: Balance comparison
+                status_text.text("💰 Processing balance comparisons...")
+                df_prev_cp = preprocess_comp(df_prev_raw)
+                df_curr_cp = preprocess_comp(df_curr_raw)
+                progress_bar.progress(80)
+
+                # Step 5: Generating report
+                status_text.text("📝 Generating final report...")
+                out = io.BytesIO()
+                with pd.ExcelWriter(out, engine='openpyxl') as w:
+                    slip.to_excel(w, sheet_name='Slippage', index=False)
+                    branch_sum.to_excel(w, sheet_name='Summary_Branch', index=False)
+                    actype_sum.to_excel(w, sheet_name='Summary_AcType', index=False)
+
+                    balance_comparison(df_prev_cp, df_curr_cp, w)
+                    pivot_compare(df_prev_cp, df_curr_cp,
+                                  by='Ac Type Desc', writer=w, sheet_name='Compare')
+                    pivot_compare(df_prev_cp, df_curr_cp,
+                                  by='Branch Name', writer=w, sheet_name='Branch')
+                    autofit_excel(w)
+
+                progress_bar.progress(100)
+                status_text.text("✅ Report generated successfully!")
+                
+                out.seek(0)
+                
+                # Success message with download button
+                st.success("🎉 Your unified report is ready for download!")
+                st.download_button(
+                    label="📥 Download Unified Report",
+                    data=out,
+                    file_name=f"unified_report_{datetime.now():%Y%m%d_%H%M%S}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+                # Clean temp files
+                os.unlink(tmp_prev_path)
+                os.unlink(tmp_curr_path)
+
+            except Exception as ex:
+                st.error("❌ An error occurred while processing your files")
+                with st.expander("🔍 View Error Details"):
+                    st.code(str(ex))
+                    st.text("Full traceback:")
+                    st.code(traceback.format_exc())
+                    
+                # Clean temp files if they exist
                 try:
-                    with tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as tmp_prev, \
-                         tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False) as tmp_curr:
-                        tmp_prev_path = tmp_prev.name
-                        tmp_curr_path = tmp_curr.name
-                        tmp_prev.write(prev_upl.getbuffer())
-                        tmp_curr.write(curr_upl.getbuffer())
-
-                    df_prev_raw = pd.read_excel(tmp_prev_path)
-                    df_curr_raw = pd.read_excel(tmp_curr_path)
-
-                    # Slippage
-                    df_prev_sl = preprocess_slippage(df_prev_raw)
-                    df_curr_sl = preprocess_slippage(df_curr_raw)
-                    slip = detect_slippage(df_prev_sl, df_curr_sl)
-                    branch_sum = category_matrix(slip, 'Branch Name')
-                    actype_sum = category_matrix(slip, 'Ac Type Desc')
-
-                    # Balance
-                    df_prev_cp = preprocess_comp(df_prev_raw)
-                    df_curr_cp = preprocess_comp(df_curr_raw)
-
-                    out = io.BytesIO()
-                    with pd.ExcelWriter(out, engine='openpyxl') as w:
-                        slip.to_excel(w, sheet_name='Slippage', index=False)
-                        branch_sum.to_excel(w, sheet_name='Summary_Branch', index=False)
-                        actype_sum.to_excel(w, sheet_name='Summary_AcType', index=False)
-
-                        balance_comparison(df_prev_cp, df_curr_cp, w)
-                        pivot_compare(df_prev_cp, df_curr_cp,
-                                      by='Ac Type Desc', writer=w, sheet_name='Compare')
-                        pivot_compare(df_prev_cp, df_curr_cp,
-                                      by='Branch Name', writer=w, sheet_name='Branch')
-                        autofit_excel(w)
-
-                    out.seek(0)
-                    st.success("✅ Report ready!")
-                    st.download_button(
-                        label="📥 Download unified report",
-                        data=out,
-                        file_name=f"unified_report_{datetime.now():%Y%m%d_%H%M%S}.xlsx",
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-
-                    # Clean temp files
                     os.unlink(tmp_prev_path)
                     os.unlink(tmp_curr_path)
-
-                except Exception as ex:
-                    st.error("❌ Processing failed")
-                    with st.expander("Show error"):
-                        st.code(traceback.format_exc())
+                except:
+                    pass
+    else:
+        st.info("👆 Please upload both previous and current period Excel files to proceed")
 
 if __name__ == "__main__":
     main()
