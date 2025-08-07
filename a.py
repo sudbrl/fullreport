@@ -240,7 +240,7 @@ KEEP_SLIPPAGE = ['Branch Name', 'Main Code', 'Ac Type Desc', 'Name',
 PROV_MAP = {'G': 1, 'W': 2, 'S': 3, 'D': 4, 'B': 5}
 CAT_NAMES = {'G': 'Good', 'W': 'Watchlist', 'S': 'Substandard',
              'D': 'Doubtful', 'B': 'Bad'}
-CAT_ORDER = ['Good', 'Substandard', 'Doubtful', 'Bad']
+CAT_ORDER = ['Good', 'Watchlist', 'Substandard', 'Doubtful', 'Bad']
 
 STAFF_LOANS = {
     'STAFF SOCIAL LOAN', 'STAFF VEHICLE LOAN', 'STAFF HOME LOAN',
